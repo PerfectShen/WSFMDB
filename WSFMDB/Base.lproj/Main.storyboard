@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9532" systemVersion="14F1605" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9530"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="ViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
+                        <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="num" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="POx-wj-81W">
+                                <rect key="frame" x="40" y="94" width="520" height="40"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="NfH-MN-AB2"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="name" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="BXY-NU-uLu">
+                                <rect key="frame" x="40" y="144" width="520" height="40"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="yxH-yq-3CU"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dcu-jA-tpS">
+                                <rect key="frame" x="40" y="214" width="250" height="40"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="rJH-Fs-I8M"/>
+                                </constraints>
+                                <state key="normal" title="添加"/>
+                                <connections>
+                                    <action selector="addAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="BQq-2T-c8G"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mtq-hD-kau">
+                                <rect key="frame" x="310" y="214" width="250" height="40"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="ESB-HJ-ncZ"/>
+                                </constraints>
+                                <state key="normal" title="删除"/>
+                                <connections>
+                                    <action selector="deleAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="sT9-yI-yOC"/>
+                                </connections>
+                            </button>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sKw-32-1mK">
+                                <rect key="frame" x="40" y="264" width="520" height="150"/>
+                                <color key="backgroundColor" red="0.93927746999999995" green="1" blue="0.81882154750000002" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="150" id="iR1-OU-hhs"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="mtq-hD-kau" firstAttribute="leading" secondItem="dcu-jA-tpS" secondAttribute="trailing" constant="20" id="3hU-OQ-O25"/>
+                            <constraint firstItem="BXY-NU-uLu" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="20" id="6Uh-5n-j6i"/>
+                            <constraint firstItem="POx-wj-81W" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="74" id="92f-44-PNB"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="mtq-hD-kau" secondAttribute="trailing" constant="20" id="AM5-pe-YKD"/>
+                            <constraint firstItem="dcu-jA-tpS" firstAttribute="top" secondItem="BXY-NU-uLu" secondAttribute="bottom" constant="30" id="AjF-PK-hX4"/>
+                            <constraint firstItem="POx-wj-81W" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="20" id="DM4-K3-jkZ"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="sKw-32-1mK" secondAttribute="trailing" constant="20" id="DQ9-Dx-1qt"/>
+                            <constraint firstItem="mtq-hD-kau" firstAttribute="top" secondItem="BXY-NU-uLu" secondAttribute="bottom" constant="30" id="Ewj-V1-6mx"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="mtq-hD-kau" secondAttribute="trailing" constant="20" id="IZK-Wo-YMN"/>
+                            <constraint firstItem="dcu-jA-tpS" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="20" id="RxL-as-Gtk"/>
+                            <constraint firstItem="sKw-32-1mK" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="20" id="Szz-Gn-jwX"/>
+                            <constraint firstItem="BXY-NU-uLu" firstAttribute="top" secondItem="POx-wj-81W" secondAttribute="bottom" constant="10" id="UHS-6q-u1p"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="POx-wj-81W" secondAttribute="trailing" constant="20" id="VXY-Mv-H9C"/>
+                            <constraint firstItem="mtq-hD-kau" firstAttribute="leading" secondItem="dcu-jA-tpS" secondAttribute="trailing" constant="428" id="ZBN-tn-eJJ"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="BXY-NU-uLu" secondAttribute="trailing" constant="20" id="bEQ-N6-QTL"/>
+                            <constraint firstItem="mtq-hD-kau" firstAttribute="width" secondItem="dcu-jA-tpS" secondAttribute="width" id="icS-Z1-Ns6"/>
+                            <constraint firstItem="dcu-jA-tpS" firstAttribute="top" secondItem="BXY-NU-uLu" secondAttribute="bottom" constant="30" id="jA5-uV-DXe"/>
+                            <constraint firstItem="sKw-32-1mK" firstAttribute="top" secondItem="BXY-NU-uLu" secondAttribute="bottom" constant="80" id="mAM-Y2-uGq"/>
+                            <constraint firstItem="mtq-hD-kau" firstAttribute="top" secondItem="BXY-NU-uLu" secondAttribute="bottom" constant="30" id="pI7-Y9-5Vx"/>
+                            <constraint firstItem="mtq-hD-kau" firstAttribute="leading" secondItem="dcu-jA-tpS" secondAttribute="trailing" constant="20" id="pdm-pT-0Hf"/>
+                            <constraint firstItem="mtq-hD-kau" firstAttribute="height" secondItem="dcu-jA-tpS" secondAttribute="height" id="rIb-SH-DrD"/>
+                            <constraint firstItem="dcu-jA-tpS" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="20" id="wtg-1S-bze"/>
+                            <constraint firstItem="mtq-hD-kau" firstAttribute="width" secondItem="dcu-jA-tpS" secondAttribute="width" id="ytA-rr-Pxi"/>
+                        </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="ZBN-tn-eJJ"/>
+                                <exclude reference="pdm-pT-0Hf"/>
+                            </mask>
+                        </variation>
+                    </view>
+                    <connections>
+                        <outlet property="addBtn" destination="dcu-jA-tpS" id="CE9-j1-twJ"/>
+                        <outlet property="deleBtn" destination="mtq-hD-kau" id="rbM-Pc-NLg"/>
+                        <outlet property="nameTF" destination="BXY-NU-uLu" id="3WW-fk-WC9"/>
+                        <outlet property="numTF" destination="POx-wj-81W" id="8ZB-B2-qCo"/>
+                        <outlet property="resultTextView" destination="sKw-32-1mK" id="3pu-E0-cPd"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="295" y="226"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="HKB-tU-h79">
+            <objects>
+                <viewController id="yAs-Ab-GYc" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="tOa-cB-kWX"/>
+                        <viewControllerLayoutGuide type="bottom" id="Vfg-0t-jXo"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="cHI-Da-7jY">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="JF6-Oq-Phi" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+        </scene>
+    </scenes>
+</document>
