@@ -4,4 +4,9 @@
 集成方便使用简单。
 
 
-［!预览图］
+［!预览图］()
+
+[![预览图]](http://www.cnblogs.com/Seeulater/)
+[预览图]:https://github.com/PerfectShen/WSFMDB/blob/master/WSFMDB.gif "欢迎私信我哦"
+[我的博客](http://www.cnblogs.com/Seeulater/ "欢迎私信我哦")
+[我的个人主页](http://perfectshen.github.io "欢迎交流讨论")
