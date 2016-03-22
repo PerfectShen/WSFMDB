@@ -95,12 +95,10 @@
 #pragma mark - must be override method
 /**
  * 创建表
- * 如果已经创建，返回YES
+ * 如果已经创建，返回YES  （transients 不想创建成本地数据库 字段的 属性 - ）
  */
 + (BOOL)createTableWithNoProperties:(NSArray *)transients;
 
-/** 如果子类中有一些property不需要创建数据库字段，那么这个方法必须在模型类中重写
- */
-//+ (NSArray *)transients;
+
 
 @end
