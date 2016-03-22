@@ -10,6 +10,8 @@
 
 #import "WSDBHelper.h"
 
+#import <objc/runtime.h>
+#import <objc/message.h>
 
 
 
@@ -17,6 +19,8 @@
 static const char pkKey;
 static const char columeNamesKey;
 static const char columeTypesKey;
+
+NSArray *wsdb_transients;
 
 
 @implementation NSObject (FMDB)
@@ -82,7 +86,9 @@ static const char columeTypesKey;
 {
     NSMutableArray *proNames = [NSMutableArray array];
     NSMutableArray *proTypes = [NSMutableArray array];
-    NSArray *theTransients = [[self class] transients];
+    
+    NSArray *theTransients = [NSArray arrayWithArray:wsdb_transients];
+
     unsigned int outCount, i;
     objc_property_t *properties = class_copyPropertyList([self class], &outCount);
     for (i = 0; i < outCount; i++) {
@@ -175,8 +181,9 @@ static const char columeTypesKey;
  * 如果已经创建，返回YES
  */
 
-+ (BOOL)createTable
++ (BOOL)createTableWithNoProperties:(NSArray *)transients
 {
+    wsdb_transients = [NSArray arrayWithArray:transients];
     FMDatabase *db = [FMDatabase databaseWithPath:[WSDBHelper dbPath]];
     if (![db open]) {
         NSLog(@"数据库打开失败!");
@@ -649,9 +656,9 @@ static const char columeTypesKey;
 }
 
 
-+ (NSArray *)transients{
-    
-    return @[];
-}
+//+ (NSArray *)transients{
+//    
+//    return @[];
+//}
 
 @end

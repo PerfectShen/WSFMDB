@@ -44,7 +44,7 @@
  */
 + (NSDictionary *)getPropertys;
 
-/** 获取所有属性，包括主键 */
+/** 获取所有属性，包括主键 (自定义 一个 主键  不使用存储 数据库时自动生成的主键) */
 + (NSDictionary *)getAllProperties;
 
 
@@ -84,7 +84,7 @@
 
 
 
-// 值 为 通过 条件查找  － 返回数组中的第一个 
+//通过 条件查找  － 返回数组中的第一个
 + (instancetype)findWhereColoum:(NSString *)coloum equleToValue:(NSString *)value;
 
 /** 通过条件查找数据
@@ -97,9 +97,10 @@
  * 创建表
  * 如果已经创建，返回YES
  */
-+ (BOOL)createTable;
-/** 如果子类中有一些property不需要创建数据库字段，那么这个方法必须在子类中重写
++ (BOOL)createTableWithNoProperties:(NSArray *)transients;
+
+/** 如果子类中有一些property不需要创建数据库字段，那么这个方法必须在模型类中重写
  */
-+ (NSArray *)transients;
+//+ (NSArray *)transients;
 
 @end

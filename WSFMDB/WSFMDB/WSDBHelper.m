@@ -1,11 +1,9 @@
 //
-//  JKDataBase.m
-//  JKBaseModel
-//
-//  Created by zx_04 on 15/6/24.
 //
 //
-
+//  Created by TYRBL on 15/10/28.
+//  Copyright © 2015年 Senro Wang. All rights reserved.
+//
 #import "WSDBHelper.h"
 
 @interface WSDBHelper ()

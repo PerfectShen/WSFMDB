@@ -13,7 +13,7 @@
 + (void)initialize
 {
     
-        [self createTable];
+        [self createTableWithNoProperties:@[@"job"]];
    
 }
 
