@@ -15,15 +15,15 @@
 		64D2ECD61BE079FC0086A2C0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 64D2ECD41BE079FC0086A2C0 /* LaunchScreen.storyboard */; };
 		64D2ECE11BE079FC0086A2C0 /* WSFMDBTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 64D2ECE01BE079FC0086A2C0 /* WSFMDBTests.m */; };
 		64D2ECEC1BE079FC0086A2C0 /* WSFMDBUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 64D2ECEB1BE079FC0086A2C0 /* WSFMDBUITests.m */; };
-		64D2ECFC1BE07A420086A2C0 /* NSObject+FMDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 64D2ECFB1BE07A420086A2C0 /* NSObject+FMDB.m */; settings = {ASSET_TAGS = (); }; };
-		64D2ECFF1BE0A4670086A2C0 /* WSDBHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 64D2ECFE1BE0A4670086A2C0 /* WSDBHelper.m */; settings = {ASSET_TAGS = (); }; };
-		64D2ED0D1BE0A56F0086A2C0 /* FMDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 64D2ED031BE0A56F0086A2C0 /* FMDatabase.m */; settings = {ASSET_TAGS = (); }; };
-		64D2ED0E1BE0A56F0086A2C0 /* FMDatabaseAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 64D2ED051BE0A56F0086A2C0 /* FMDatabaseAdditions.m */; settings = {ASSET_TAGS = (); }; };
-		64D2ED0F1BE0A56F0086A2C0 /* FMDatabasePool.m in Sources */ = {isa = PBXBuildFile; fileRef = 64D2ED071BE0A56F0086A2C0 /* FMDatabasePool.m */; settings = {ASSET_TAGS = (); }; };
-		64D2ED101BE0A56F0086A2C0 /* FMDatabaseQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 64D2ED091BE0A56F0086A2C0 /* FMDatabaseQueue.m */; settings = {ASSET_TAGS = (); }; };
-		64D2ED111BE0A56F0086A2C0 /* FMResultSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 64D2ED0C1BE0A56F0086A2C0 /* FMResultSet.m */; settings = {ASSET_TAGS = (); }; };
+		64D2ECFC1BE07A420086A2C0 /* NSObject+FMDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 64D2ECFB1BE07A420086A2C0 /* NSObject+FMDB.m */; };
+		64D2ECFF1BE0A4670086A2C0 /* WSDBHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 64D2ECFE1BE0A4670086A2C0 /* WSDBHelper.m */; };
+		64D2ED0D1BE0A56F0086A2C0 /* FMDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 64D2ED031BE0A56F0086A2C0 /* FMDatabase.m */; };
+		64D2ED0E1BE0A56F0086A2C0 /* FMDatabaseAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 64D2ED051BE0A56F0086A2C0 /* FMDatabaseAdditions.m */; };
+		64D2ED0F1BE0A56F0086A2C0 /* FMDatabasePool.m in Sources */ = {isa = PBXBuildFile; fileRef = 64D2ED071BE0A56F0086A2C0 /* FMDatabasePool.m */; };
+		64D2ED101BE0A56F0086A2C0 /* FMDatabaseQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 64D2ED091BE0A56F0086A2C0 /* FMDatabaseQueue.m */; };
+		64D2ED111BE0A56F0086A2C0 /* FMResultSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 64D2ED0C1BE0A56F0086A2C0 /* FMResultSet.m */; };
 		64D2ED131BE0A7760086A2C0 /* libsqlite3.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 64D2ED121BE0A7760086A2C0 /* libsqlite3.0.tbd */; };
-		64D2ED161BE0A8240086A2C0 /* explame.m in Sources */ = {isa = PBXBuildFile; fileRef = 64D2ED151BE0A8240086A2C0 /* explame.m */; settings = {ASSET_TAGS = (); }; };
+		64D2ED161BE0A8240086A2C0 /* explame.m in Sources */ = {isa = PBXBuildFile; fileRef = 64D2ED151BE0A8240086A2C0 /* explame.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -212,6 +212,7 @@
 				64D2ECBF1BE079FB0086A2C0 /* Sources */,
 				64D2ECC01BE079FB0086A2C0 /* Frameworks */,
 				64D2ECC11BE079FB0086A2C0 /* Resources */,
+				648FF5E41CD20A2A0017E64B /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -326,6 +327,22 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		648FF5E41CD20A2A0017E64B /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "name = 'FMDB'\necho \"hello ${name}\"";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		64D2ECBF1BE079FB0086A2C0 /* Sources */ = {
@@ -570,6 +587,7 @@
 				64D2ECF21BE079FC0086A2C0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		64D2ECF31BE079FC0086A2C0 /* Build configuration list for PBXNativeTarget "WSFMDBTests" */ = {
 			isa = XCConfigurationList;
@@ -578,6 +596,7 @@
 				64D2ECF51BE079FC0086A2C0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		64D2ECF61BE079FC0086A2C0 /* Build configuration list for PBXNativeTarget "WSFMDBUITests" */ = {
 			isa = XCConfigurationList;
@@ -586,6 +605,7 @@
 				64D2ECF81BE079FC0086A2C0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

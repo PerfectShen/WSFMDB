@@ -22,13 +22,15 @@
 
 #define primaryId   @"pk"
 
-#define OtherPrimaryKeyId @"number"
-
 
 @interface NSObject (FMDB)
 
 /** 主键 id */
 @property (nonatomic, assign)   int        pk;
+
+@property (nonatomic,copy) NSString *primaryKeyName; //主键名
+
+
 /** 列名 */
 @property (retain, readonly, nonatomic) NSMutableArray         *columeNames;
 /** 列类型 */
@@ -36,8 +38,25 @@
 
 
 
+/**
+ * 创建表
+ * 如果已经创建，返回YES  （transients 不想创建成本地数据库 字段的 属性 - ）
+ */
++ (BOOL)createTableWithNoProperties:(NSArray *)transients withPrimaryKey:(NSString *)primarykey;
+
+/**
+ *  创建表  指定  列
+ */
++ (BOOL)createTableWithProperties:(NSArray *)properties withPrimaryKey:(NSString *)primarykey;
+
+
 //如果 要使用数据库  那么 在初始化的时候 就调用 一下 这个方法
-- (void)initlizedPropertyNames;
+- (void)initlizedWithProperties:(NSArray *)properties;;
+
+- (void)initlizedWithNoProperties:(NSArray *)transients;
+
+
+
 
 /**
  *  获取该类的所有属性
@@ -51,35 +70,110 @@
 /** 表中的字段*/
 + (NSArray *)getColumns;
 
-/** 保存或更新
- * 如果不存在主键，保存，
- * 有主键，则更新
+
+
+
+#pragma mark -- 数据操作 ---
+
+
+
+/**
+ *  保存 或者 更新 （如果 已经存在 则更新 如果没有 存在 则保存）
+ *
+ *  @return 保存或者更新成功 返回 YES
  */
 - (BOOL)saveOrUpdate;
-/** 保存单个数据 */
+
+
+
+/**
+ *  保存单条 数据
+ *
+ *  @return 成功 返回 YES
+ */
 - (BOOL)save;
-/** 批量保存数据 */
+
+/**
+ *  保存 一个数组
+ *
+ *  @param array 模型数组
+ *
+ *  @return 成功 返回 YES
+ */
 + (BOOL)saveObjects:(NSArray *)array;
-/** 更新单个数据 */
+
+
+
+/**
+ *  更新单条数据
+ *
+ *  @return 成功 返回 YES
+ */
 - (BOOL)update;
-/** 批量更新数据*/
+
+/**
+ *  批量更新数据
+ *
+ *  @param array 模型数组
+ *
+ *  @return 成功返回 YES
+ */
 + (BOOL)updateObjects:(NSArray *)array;
-/** 删除单个数据 */
+
+/**
+ *  删除 单条 数据
+ *
+ *  @return 成功返回 YES
+ */
 - (BOOL)deleteObject;
-/** 批量删除数据 */
+
+
+/**
+ *  删除  一组数据
+ *
+ *  @param array 模型数据
+ *
+ *  @return 成功 返回YES
+ */
 + (BOOL)deleteObjects:(NSArray *)array;
-/** 通过条件删除数据 */
+
+
+/**
+ *  通过条件删除 数据
+ *
+ *  @param criteria 条件
+ *
+ *  @return 成功返回 YES
+ */
 + (BOOL)deleteObjectsByCriteria:(NSString *)criteria;
-/** 清空表 */
+
+
+/**
+ *  清空表
+ *
+ *  @return 成功返回YES
+ */
 + (BOOL)clearTable;
 
-/** 查询全部数据 */
+
+/**
+ *  查询所有数据
+ *
+ *  @return 数据模型
+ */
 + (NSArray *)findAll;
 
-/** 通过主键查询 */
+/** 通过主键查询 */ //(已经去掉)
 + (instancetype)findByPK:(int)inPk;
 
-/** 查找某条数据 */
+
+/**
+ *  通过 某条件查找 数据
+ *
+ *  @param criteria 条件语句
+ *
+ *  @return
+ */
 + (instancetype)findFirstByCriteria:(NSString *)criteria;
 
 
@@ -87,17 +181,17 @@
 //通过 条件查找  － 返回数组中的第一个
 + (instancetype)findWhereColoum:(NSString *)coloum equleToValue:(NSString *)value;
 
+
+
+
+
 /** 通过条件查找数据
  * 这样可以进行分页查询 @" WHERE pk > 5 limit 10"
  */
 + (NSArray *)findByCriteria:(NSString *)criteria;
 
-#pragma mark - must be override method
-/**
- * 创建表
- * 如果已经创建，返回YES  （transients 不想创建成本地数据库 字段的 属性 - ）
- */
-+ (BOOL)createTableWithNoProperties:(NSArray *)transients;
+
+
 
 
 

@@ -13,8 +13,9 @@
 + (void)initialize
 {
     
-        [self createTableWithNoProperties:@[@"job"]];
+//        [self createTableWithNoProperties:@[@"job"] withPrimaryKey:@""];
    
+    [self createTableWithProperties:@[@"number",@"name"] withPrimaryKey:@""];
 }
 
 
@@ -22,7 +23,8 @@
     
     if (self = [super init]) {
     
-        [self initlizedPropertyNames];
+        [self initlizedWithProperties:@[@"number",@"name"]];
+        self.primaryKeyName = @"number";
         
     }
     return self;

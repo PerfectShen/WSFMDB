@@ -30,13 +30,13 @@ static WSDBHelper *_instance = nil;
 {
     NSString *docsdir = [NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
     NSFileManager *filemanage = [NSFileManager defaultManager];
-    docsdir = [docsdir stringByAppendingPathComponent:@"JKBD"];
+    docsdir = [docsdir stringByAppendingPathComponent:@"TYRBL"];
     BOOL isDir;
     BOOL exit =[filemanage fileExistsAtPath:docsdir isDirectory:&isDir];
     if (!exit || !isDir) {
         [filemanage createDirectoryAtPath:docsdir withIntermediateDirectories:YES attributes:nil error:nil];
     }
-    NSString *dbpath = [docsdir stringByAppendingPathComponent:@"jkdb.sqlite"];
+    NSString *dbpath = [docsdir stringByAppendingPathComponent:@"tyrbl.sqlite"];
     return dbpath;
 }
 

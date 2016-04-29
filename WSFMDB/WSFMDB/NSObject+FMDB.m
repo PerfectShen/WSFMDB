@@ -19,19 +19,28 @@
 static const char pkKey;
 static const char columeNamesKey;
 static const char columeTypesKey;
+static const char primaryKeyNameKey;
 
-NSArray *wsdb_transients;
 
 
 @implementation NSObject (FMDB)
 
-- (void)initlizedPropertyNames{
-    NSDictionary *dic = [self.class getAllProperties];
+- (void)initlizedWithNoProperties:(NSArray *)transients{
+    NSDictionary *dic = [self.class checkTableColumNameWithNoProperties:transients];
     self.columeNames = [[NSMutableArray alloc] initWithArray:[dic objectForKey:@"name"]];
     self.columeTypes = [[NSMutableArray alloc] initWithArray:[dic objectForKey:@"type"]];
     
 }
 
+- (void)initlizedWithProperties:(NSArray *)properties{
+    NSDictionary *dic = [self.class checkTableColumNameWithProperties:properties];
+
+    self.columeNames = [[NSMutableArray alloc] initWithArray:[dic objectForKey:@"name"]];
+    self.columeTypes = [[NSMutableArray alloc] initWithArray:[dic objectForKey:@"type"]];
+}
+
+
+#pragma mark -- 重写 setter 方法 ---
 
 //重写 set 方法
 - (void)setPk:(int)pk{
@@ -53,6 +62,12 @@ NSArray *wsdb_transients;
     objc_setAssociatedObject(self, &columeTypesKey , columeTypes, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
+- (void)setPrimaryKeyName:(NSString *)primaryKeyName{
+    
+    objc_setAssociatedObject(self, &primaryKeyNameKey, primaryKeyName, OBJC_ASSOCIATION_COPY_NONATOMIC);
+}
+
+#pragma mark -- 重写  getter 方法 ---
 
 //重写  getter 方法
 
@@ -73,10 +88,223 @@ NSArray *wsdb_transients;
     return  objc_getAssociatedObject(self, &columeTypesKey);
 }
 
+- (NSString *)primaryKeyName{
+    
+    return objc_getAssociatedObject(self, &primaryKeyNameKey);
+}
 
 
 
+#pragma mark -- 创建 表 ---
+/**
+ * 创建表
+ * 如果已经创建，返回YES
+ */
 
++ (BOOL)createTableWithNoProperties:(NSArray *)transients withPrimaryKey:(NSString *)primarykey
+{
+    
+
+    FMDatabase *db = [[self class] isOpenDataBase];
+   if (!db) return NO; //如果打不开数据库 返回  NO
+    
+    NSString *tableName = NSStringFromClass(self.class);
+    NSString *columeAndType = [self.class tableColumeAndTyeStringWithNoProperties:transients];
+    
+    NSString *sql = [NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS %@(%@);",tableName,columeAndType];
+    if (![db executeUpdate:sql]) {
+        return NO;
+    }
+    
+    NSMutableArray *columns = [NSMutableArray array];
+    FMResultSet *resultSet = [db getTableSchema:tableName];
+    while ([resultSet next]) {
+        NSString *column = [resultSet stringForColumn:@"name"];
+        [columns addObject:column];
+    }
+    NSDictionary *dict = [self.class checkTableColumNameWithNoProperties:transients];
+    NSArray *aPros = [dict objectForKey:@"name"];
+    NSPredicate *filterPredicate = [NSPredicate predicateWithFormat:@"NOT (SELF IN %@)",columns];
+    //过滤数组
+    NSArray *resultArray = [aPros filteredArrayUsingPredicate:filterPredicate];
+    
+    for (NSString *column in resultArray) {
+        NSUInteger index = [aPros indexOfObject:column];
+        NSString *proType = [[dict objectForKey:@"type"] objectAtIndex:index];
+        NSString *fieldSql = [NSString stringWithFormat:@"%@ %@",column,proType];
+        NSString *sql = [NSString stringWithFormat:@"ALTER TABLE %@ ADD COLUMN %@ ",NSStringFromClass(self.class),fieldSql];
+        if (![db executeUpdate:sql]) {
+            return NO;
+        }
+    }
+    [db close];
+    return YES;
+}
+
+
++ (BOOL )createTableWithProperties:(NSArray *)properties withPrimaryKey:(NSString *)primarykey{
+    
+    FMDatabase *db = [[self class] isOpenDataBase];
+    if (!db) return NO; //如果打不开数据库 返回  NO
+    
+    NSString *tableName = NSStringFromClass(self.class);
+    NSString *columeAndType = [self.class tableColumeAndTyeStringWithProperties:properties];
+    NSString *sql = [NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS %@(%@);",tableName,columeAndType];
+    if (![db executeUpdate:sql]) {
+        return NO;
+    }
+    
+    NSMutableArray *columns = [NSMutableArray array];
+    FMResultSet *resultSet = [db getTableSchema:tableName];
+    while ([resultSet next]) {
+        NSString *column = [resultSet stringForColumn:@"name"];
+        [columns addObject:column];
+    }
+    NSDictionary *dict = [self.class checkTableColumNameWithProperties:properties];
+    NSArray *aPros = [dict objectForKey:@"name"];
+    NSPredicate *filterPredicate = [NSPredicate predicateWithFormat:@"NOT (SELF IN %@)",columns];
+    //过滤数组
+    NSArray *resultArray = [aPros filteredArrayUsingPredicate:filterPredicate];
+    
+    for (NSString *column in resultArray) {
+        NSUInteger index = [aPros indexOfObject:column];
+        NSString *proType = [[dict objectForKey:@"type"] objectAtIndex:index];
+        NSString *fieldSql = [NSString stringWithFormat:@"%@ %@",column,proType];
+        NSString *sql = [NSString stringWithFormat:@"ALTER TABLE %@ ADD COLUMN %@ ",NSStringFromClass(self.class),fieldSql];
+        if (![db executeUpdate:sql]) {
+            return NO;
+        }
+    }
+    [db close];
+    return YES;
+}
+
+
+
+#pragma mark -- private ---
++ (FMDatabase *)isOpenDataBase{
+    
+    FMDatabase *db = [FMDatabase databaseWithPath:[WSDBHelper dbPath]];
+    if (![db open]) {
+        NSLog(@"数据库打开失败!");
+        return nil;
+    }
+    return db;
+}
+
+
+#pragma mark -- 构造 表 字段  ---
+// 根据指定的 属性名 创建表
++ (NSString *)tableColumeAndTyeStringWithProperties:(NSArray *)properties{
+    
+    NSMutableString* pars = [NSMutableString string];
+    NSDictionary *dict = [self.class getAllProperties];
+    NSMutableArray *proNames = [dict objectForKey:@"name"];
+    NSMutableArray *proTypes = [dict objectForKey:@"type"];
+    
+    for (int i=0; i< proNames.count; i++) {
+        NSString *aName = [proNames objectAtIndex:i];
+        if([properties containsObject:aName]){
+            [pars appendFormat:@"%@ %@",[proNames objectAtIndex:i],[proTypes objectAtIndex:i]];
+            if(i+1 != proNames.count)
+            {
+                [pars appendString:@","];
+            }
+        }else{
+            
+            continue ;
+        }
+       
+    }
+    if ([[pars substringWithRange:NSMakeRange(pars.length - 1, 1)] isEqualToString:@","]) {
+        
+        [pars deleteCharactersInRange:NSMakeRange(pars.length - 1, 1)];
+    }
+    return pars;
+}
+
+//所有的属性名 除去  transients 列表中的 属性 为  表的 字段
++ (NSString *)tableColumeAndTyeStringWithNoProperties:(NSArray *)transients{
+    
+    NSMutableString* pars = [NSMutableString string];
+    NSDictionary *dict = [self.class getAllProperties];
+    
+    NSMutableArray *proNames = [dict objectForKey:@"name"];
+    NSMutableArray *proTypes = [dict objectForKey:@"type"];
+    
+    for (int i=0; i< proNames.count; i++) {
+        
+        NSString *aName = [proNames objectAtIndex:i];
+
+        if ([transients containsObject:aName]) {
+            
+            continue ;
+        }
+        [pars appendFormat:@"%@ %@",aName,[proTypes objectAtIndex:i]];
+        if(i+1 != proNames.count)
+        {
+            [pars appendString:@","];
+        }
+    }
+    
+    if ([[pars substringWithRange:NSMakeRange(pars.length - 1, 1)] isEqualToString:@","]) {
+        
+         [pars deleteCharactersInRange:NSMakeRange(pars.length - 1, 1)];
+    }
+    return pars;
+}
+
+
+
+//检查数据库中的  字段
++ (NSDictionary *)checkTableColumNameWithNoProperties:(NSArray *)transients{
+    
+//        NSDictionary *dic = [self.class getAllProperties];
+    NSDictionary *dict = [self.class getPropertys];
+    NSMutableArray *proNames = [NSMutableArray array];
+    NSMutableArray *proTypes = [NSMutableArray array];
+    [proNames addObjectsFromArray:[dict objectForKey:@"name"]];
+    [proTypes addObjectsFromArray:[dict objectForKey:@"type"]];
+    
+    NSInteger count = proNames.count;
+    for (NSInteger i = count -1; i >= 0; i --) {
+        NSString *aName = [proNames objectAtIndex:i];
+        if ([transients containsObject:aName]) {
+            
+            [proNames removeObjectAtIndex:i];
+            [proTypes removeObjectAtIndex:i];
+        }else{
+            
+            continue ;
+        }
+    }
+  return [NSDictionary dictionaryWithObjectsAndKeys:proNames,@"name",proTypes,@"type",nil];
+    
+}
+
+
++ (NSDictionary *)checkTableColumNameWithProperties:(NSArray *)properties{
+    
+    NSDictionary *dict = [self.class getPropertys];
+    NSMutableArray *proNames = [NSMutableArray array];
+    NSMutableArray *proTypes = [NSMutableArray array];
+    [proNames addObjectsFromArray:[dict objectForKey:@"name"]];
+    [proTypes addObjectsFromArray:[dict objectForKey:@"type"]];
+    
+    NSInteger count = proNames.count;
+    for (NSInteger i = count -1; i >= 0; i--) {
+        NSString *aName = [proNames objectAtIndex:i];
+        if (![properties containsObject:aName]) {
+            [proNames removeObjectAtIndex:i];
+            [proTypes removeObjectAtIndex:i];
+        }else{
+            
+            continue ;
+        }
+    }
+    return [NSDictionary dictionaryWithObjectsAndKeys:proNames,@"name",proTypes,@"type",nil];
+
+}
 
 #pragma mark - base method
 /**
@@ -86,18 +314,12 @@ NSArray *wsdb_transients;
 {
     NSMutableArray *proNames = [NSMutableArray array];
     NSMutableArray *proTypes = [NSMutableArray array];
-    
-    NSArray *theTransients = [NSArray arrayWithArray:wsdb_transients];
-
     unsigned int outCount, i;
     objc_property_t *properties = class_copyPropertyList([self class], &outCount);
     for (i = 0; i < outCount; i++) {
         objc_property_t property = properties[i];
         //获取属性名
         NSString *propertyName = [NSString stringWithCString:property_getName(property) encoding:NSUTF8StringEncoding];
-        if ([theTransients containsObject:propertyName]) {
-            continue;
-        }
         [proNames addObject:propertyName];
         //获取属性类型等参数
         NSString *propertyType = [NSString stringWithCString: property_getAttributes(property) encoding:NSUTF8StringEncoding];
@@ -132,15 +354,15 @@ NSArray *wsdb_transients;
     return [NSDictionary dictionaryWithObjectsAndKeys:proNames,@"name",proTypes,@"type",nil];
 }
 
-/** 获取所有属性，包含主键pk */
+//构造 数据库字段
 + (NSDictionary *)getAllProperties
 {
     NSDictionary *dict = [self.class getPropertys];
     
     NSMutableArray *proNames = [NSMutableArray array];
     NSMutableArray *proTypes = [NSMutableArray array];
-    [proNames addObject:primaryId];
-    [proTypes addObject:[NSString stringWithFormat:@"%@ %@",SQLINTEGER,PrimaryKey]];
+//    [proNames addObject:primaryId];
+//    [proTypes addObject:[NSString stringWithFormat:@"%@ %@",SQLINTEGER,PrimaryKey]];
     [proNames addObjectsFromArray:[dict objectForKey:@"name"]];
     [proTypes addObjectsFromArray:[dict objectForKey:@"type"]];
     
@@ -176,57 +398,13 @@ NSArray *wsdb_transients;
     return [columns copy];
 }
 
-/**
- * 创建表
- * 如果已经创建，返回YES
- */
 
-+ (BOOL)createTableWithNoProperties:(NSArray *)transients
-{
-    wsdb_transients = [NSArray arrayWithArray:transients];
-    FMDatabase *db = [FMDatabase databaseWithPath:[WSDBHelper dbPath]];
-    if (![db open]) {
-        NSLog(@"数据库打开失败!");
-        return NO;
-    }
-    
-    NSString *tableName = NSStringFromClass(self.class);
-    NSString *columeAndType = [self.class getColumeAndTypeString];
-    NSString *sql = [NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS %@(%@);",tableName,columeAndType];
-    if (![db executeUpdate:sql]) {
-        return NO;
-    }
-    
-    NSMutableArray *columns = [NSMutableArray array];
-    FMResultSet *resultSet = [db getTableSchema:tableName];
-    while ([resultSet next]) {
-        NSString *column = [resultSet stringForColumn:@"name"];
-        [columns addObject:column];
-    }
-    NSDictionary *dict = [self.class getAllProperties];
-    NSArray *properties = [dict objectForKey:@"name"];
-    NSPredicate *filterPredicate = [NSPredicate predicateWithFormat:@"NOT (SELF IN %@)",columns];
-    //过滤数组
-    NSArray *resultArray = [properties filteredArrayUsingPredicate:filterPredicate];
-    
-    for (NSString *column in resultArray) {
-        NSUInteger index = [properties indexOfObject:column];
-        NSString *proType = [[dict objectForKey:@"type"] objectAtIndex:index];
-        NSString *fieldSql = [NSString stringWithFormat:@"%@ %@",column,proType];
-        NSString *sql = [NSString stringWithFormat:@"ALTER TABLE %@ ADD COLUMN %@ ",NSStringFromClass(self.class),fieldSql];
-        if (![db executeUpdate:sql]) {
-            return NO;
-        }
-    }
-    [db close];
-    return YES;
-}
 
 
 #pragma mark -- private ---
 - (BOOL )isExsistObj{
     
-    id otherPaimaryValue = [self valueForKey:OtherPrimaryKeyId];
+    id otherPaimaryValue = [self valueForKey:self.primaryKeyName];
     
     WSDBHelper *jkDB = [WSDBHelper shareInstance];
     
@@ -236,7 +414,7 @@ NSArray *wsdb_transients;
     [jkDB.dbQueue inDatabase:^(FMDatabase *db) {
         
         NSString *tableName = NSStringFromClass(self.class);
-        NSString *sql = [NSString stringWithFormat:@"SELECT * FROM %@ WHERE %@ = '%@'",tableName,OtherPrimaryKeyId,otherPaimaryValue];
+        NSString *sql = [NSString stringWithFormat:@"SELECT * FROM %@ WHERE %@ = '%@'",tableName,self.primaryKeyName,otherPaimaryValue];
         
         FMResultSet *aResult = [db executeQuery:sql];
         
@@ -270,10 +448,6 @@ NSArray *wsdb_transients;
 
     }
     
-//    if ([primaryValue intValue] <= 0) {
-//            }
-//    
-//    return [self update];
 }
 
 - (BOOL)save
@@ -367,7 +541,7 @@ NSArray *wsdb_transients;
     __block BOOL res = NO;
     [jkDB.dbQueue inDatabase:^(FMDatabase *db) {
         NSString *tableName = NSStringFromClass(self.class);
-        id primaryValue = [self valueForKey:OtherPrimaryKeyId];
+        id primaryValue = [self valueForKey:self.primaryKeyName];
 //        if (!primaryValue || primaryValue <= 0) {
 //            return ;
 //        }
@@ -381,7 +555,7 @@ NSArray *wsdb_transients;
         NSMutableArray *updateValues = [NSMutableArray  array];
         for (int i = 0; i < self.columeNames.count; i++) {
             NSString *proname = [self.columeNames objectAtIndex:i];
-            if ([proname isEqualToString:OtherPrimaryKeyId]) {
+            if ([proname isEqualToString:self.primaryKeyName]) {
                 continue;
             }
             if([proname isEqualToString:primaryId]){
@@ -398,7 +572,7 @@ NSArray *wsdb_transients;
         
         //删除最后那个逗号
         [keyString deleteCharactersInRange:NSMakeRange(keyString.length - 1, 1)];
-        NSString *sql = [NSString stringWithFormat:@"UPDATE %@ SET %@ WHERE %@ = ?;", tableName, keyString, OtherPrimaryKeyId];
+        NSString *sql = [NSString stringWithFormat:@"UPDATE %@ SET %@ WHERE %@ = ?;", tableName, keyString, self.primaryKeyName];
         [updateValues addObject:primaryValue];
         res = [db executeUpdate:sql withArgumentsInArray:updateValues];
         NSLog(res?@"更新成功":@"更新失败");
